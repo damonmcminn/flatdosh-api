@@ -1,31 +1,13 @@
 'use strict';
-var createSchema = require('schema')
+const CONFIG = require('parse-config');
+const log = require('./lib/log');
+const db = require('./lib/db');
 
-let userSchema = [
-  {
-    field: 'email',
-    type: String,
-    required: true
-  },
-  {
-    field: 'name',
-    type: String,
-    required: true
-  },
-  {
-    field: 'password',
-    type: String,
-    require: true
-  }
-];
 
-let validateUser = createSchema(userSchema);
-
-let user = {
-  email: 'damonrmcminn@gmail.com',
-  name: 'Damon',
-  age: 32,
-  password: 'pass'
-};
-
-console.log(validateUser(user));
+db.initialise()
+  .then(function(data) {
+    require('./lib/api').initialise();
+  })
+  .catch(function(err) {
+    throw err;
+  });

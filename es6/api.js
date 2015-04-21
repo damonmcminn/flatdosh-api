@@ -1,9 +1,15 @@
 import express from 'express';
 import auth from './auth';
-import CONFIG from './config';
+import CONFIG from 'parse-config';
 import log from './log';
+import errorHandler from './error';
 
-import user from './user/model';
+import {json} from 'body-parser';
+
+// controllers
+import User from './user/controller';
+import Expense from './expense/controller';
+import Balance from './balance/controller';
 
 const api = express();
 
@@ -25,19 +31,11 @@ api.initialise = function() {
   });
 }
 
-api.use('/user', function(req, res, next) {
-  //res.send(200);
-  user.all()
-    .then(function(users) {
-      res.json(users);
-    })
-    .catch(function(err) {
-      res.json(err);
-    });
-});
-api.use('/auth', auth.password);
-api.use(auth.token);
+api.use(json());
 
-api.use('*', function(err, req, res, next) {
-  res.json(err);
-});
+// auth here
+api.use('/user', User);
+api.use('/expense', Expense);
+api.use('/balance', Balance);
+
+api.use('*', errorHandler);

@@ -1,0 +1,22 @@
+export default [
+  {
+    field: 'email',
+    type: String,
+    required: true
+  },
+  {
+    field: 'description',
+    type: String,
+    required: true
+  },
+  {
+    field: 'amount',
+    type: Number,
+    required: true
+  },
+  {
+    field: 'timestamp',
+    type: Date,
+    required: true
+  }
+];
