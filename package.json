@@ -1,0 +1,27 @@
+{
+  "name": "flatdosh-api",
+  "version": "0.0.1",
+  "description": "track your flatmates",
+  "main": "index.js",
+  "scripts": {
+    "test": "jasmine",
+    "compile": "babel es6 --out-dir lib --source-maps"
+  },
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "author": "Damon McMinn",
+  "license": "Fully copyrighted",
+  "dependencies": {
+    "auth-middleware": "git://github.com/damonmcminn/auth-middleware.git",
+    "auth-utilities": "^1.1.2",
+    "bunyan": "^1.3.5",
+    "express": "^4.12.3",
+    "parse-config": "git://github.com/damonmcminn/parse-config.git",
+    "rethinkdb": "^2.0.0",
+    "schema": "git://github.com/damonmcminn/schema.git",
+    "simple-error-factory": "^0.2.0",
+    "source-map-support": "^0.2.10"
+  }
+}
