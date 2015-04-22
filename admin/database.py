@@ -6,7 +6,7 @@ db = 'flatdosh'
 host = 'localhost'
 port = 28015
 
-tables = ['users', 'expenses']
+tables = ['users', 'expenses', 'groups']
 
 parser = argparse.ArgumentParser(description='RethinkDB admin')
 parser.add_argument(
@@ -44,8 +44,12 @@ conn = r.connect(args.host, args.port, args.db)
 databases = r.db_list().run(conn)
 
 if args.drop and (db in databases):
-    print('Dropping database: {0}'.format(db))
-    r.db_drop(db).run(conn)
+    confirmed = raw_input('Are you sure? (y/N) ')
+    if confirmed == 'y':
+        print('Dropping database: {0}'.format(db))
+        r.db_drop(db).run(conn)
+    else:
+        print('Aborting.')
 elif args.drop:
     print('Database {0} does not exist'.format(db))
 
