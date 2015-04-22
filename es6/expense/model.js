@@ -13,8 +13,9 @@ function insert(expense) {
   return expenses.insert(expense).run(conn);
 };
 
-function all() {
-  return expenses.eqJoin('email', r.table('users'))
+function all(group) {
+  return expenses.filter({group})
+    .eqJoin('email', r.table('users'))
     .zip()
     .withFields('name', 'amount', 'timestamp')
     .run(conn)

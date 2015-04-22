@@ -18,5 +18,10 @@ export default [
     field: 'timestamp',
     type: Date,
     required: true
+  },
+  {
+    field: 'group',
+    type: String,
+    required: true
   }
 ];

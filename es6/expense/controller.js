@@ -8,7 +8,9 @@ export default router;
 
 function findAll(req, res, next) {
 
-  Expense.all().then(expenses => {
+  let {group} = req.user;
+
+  Expense.all(group).then(expenses => {
     res.json(expenses);
   });
 
