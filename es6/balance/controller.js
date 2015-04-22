@@ -18,7 +18,7 @@ function getBalances(req, res, next) {
       return doc.merge({amt: doc('amount').default(0)});
     })
     .group('name')
-    .sum('amt') //  map this fucker
+    .sum('amt')
     .ungroup()
     .map(x => {
       return {name: x('group'), amount: x('reduction')}
@@ -30,7 +30,7 @@ function getBalances(req, res, next) {
       let balances = results.map(result => {
         return {
           name: result.name,
-          balance: Number((result.amount - total/results.length).toFixed(2))
+          balance: +(result.amount - total/results.length).toFixed(2)
         };
       });
       res.json(balances);
