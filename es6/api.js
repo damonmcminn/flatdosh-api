@@ -4,6 +4,7 @@ import CONFIG from 'parse-config';
 import log from './log';
 import errorHandler from './error';
 import route404 from './404';
+import CORS from './cors';
 
 import {json} from 'body-parser';
 
@@ -32,6 +33,7 @@ api.initialise = function() {
   });
 }
 
+api.use(CORS);
 api.use(json());
 
 api.use('/register', User.register);
@@ -39,9 +41,8 @@ api.use('/login', auth.password);
 
 api.use(auth.token);
 
-api.use('/user', User.router);
 api.use('/expense', Expense);
 api.use('/balance', Balance);
 
 api.use(route404);
-api.use('*', errorHandler);
+//api.use('*', errorHandler);
