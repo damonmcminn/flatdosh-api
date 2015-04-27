@@ -3,9 +3,9 @@ import User from './model';
 import {isError} from 'js-type-check';
 import {group} from 'parse-config';
 
-const router = Router();
 const register = Router();
 
+// not in use
 function findAll(req, res, next) {
 
   User.all().then(users => {
@@ -33,6 +33,7 @@ function insert(req, res, next) {
     .catch(err => next(err));
 }
 
+// not in use
 function find(req, res, next) {
 
   let email = req.params.email;
@@ -47,7 +48,7 @@ function find(req, res, next) {
 
 //router.get('/', findAll);
 
-login.get('/:email', find);
+//find.get('/:email', find);
 register.post('/', insert);
 
-export default {login, register};
+export default {register};
