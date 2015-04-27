@@ -36,6 +36,7 @@ api.initialise = function() {
 api.use(CORS);
 api.use(json());
 
+
 api.use('/register', User.register);
 api.use('/login', auth.password);
 
@@ -45,4 +46,4 @@ api.use('/expense', Expense);
 api.use('/balance', Balance);
 
 api.use(route404);
-//api.use('*', errorHandler);
+api.use('*', errorHandler);
