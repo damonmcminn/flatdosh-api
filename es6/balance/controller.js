@@ -25,12 +25,19 @@ function getBalances(req, res, next) {
     })
     .run(conn)
     .then(results => {
+
       let total = results.map(result => result.amount)
         .reduce((prev, curr) => prev + curr);
+
+      let largest = results.map(result => result.amount)
+        .reduce((prev, curr) => {
+          return prev > curr ? prev : curr;
+        });
+      
       let balances = results.map(result => {
         return {
           name: result.name,
-          balance: +(result.amount - total/results.length).toFixed(2)
+          balance: +((result.amount - largest).toFixed(2))
         };
       });
       res.json(balances);
