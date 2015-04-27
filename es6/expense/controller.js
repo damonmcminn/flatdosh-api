@@ -32,8 +32,6 @@ function insert(req, res, next) {
     }
   });
 
-  console.log(expenses);
-
   return isError(Expense.validate(expenses[0])) ? next(expenses[0]) : 
     Expense.insert(expenses).then(result => {
       return result.errors === 0 ? res.json(result) : next(result);
