@@ -25,17 +25,22 @@ export default function findUser(req) {
 
   return User.get(user).then(result => {
 
-    let payload = {
-      user: result.id,
-      exp: THREE_MONTHS,
-      name: result.name,
-      group: result.group
-    };
+    if (result) {
+      let payload = {
+        user: result.id,
+        exp: THREE_MONTHS,
+        name: result.name,
+        group: result.group,
+        shared: result.shared
+      };
 
-    let hash = result.password;
-    let plain = password;
+      let hash = result.password;
+      let plain = password;
 
-    return Promise.resolve({payload, hash, plain});
+      return Promise.resolve({payload, hash, plain});
+    } else {
+      return Promise.reject(AuthError('User not found'));
+    }
 
   })
   .catch(err => Promise.reject(err));
