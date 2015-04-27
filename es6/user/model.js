@@ -27,16 +27,20 @@ let validate = createSchema([
     field: 'group',
     type: String,
     required: true
+  },
+  {
+    field: 'shared',
+    type: String
   }
 ]);
 
 
 function insert(user) {
   
-  let {email, name, password, group} = user;
+  let {email, name, password, group, shared} = user;
 
   return hash(password).then(hashed => {
-    let doc = {id: email, name, password: hashed, group};
+    let doc = {id: email, name, password: hashed, group, shared};
     return users.insert(doc).run(conn);
   });
 };
