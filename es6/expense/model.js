@@ -18,6 +18,7 @@ function all(group) {
     .eqJoin('email', r.table('users'))
     .zip()
     .withFields('name', 'amount', 'timestamp')
+    .orderBy(r.desc('timestamp'))
     .run(conn)
     .then(db.toArray);
 }
