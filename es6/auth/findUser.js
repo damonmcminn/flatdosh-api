@@ -25,9 +25,9 @@ export default function findUser(req) {
 
   return User.get(user).then(result => {
 
-    let {id, name, group, shared} = result;
-
     if (result) {
+      let {id, name, group, shared} = result;
+
       let payload = {
         user: id,
         exp: THREE_MONTHS,
