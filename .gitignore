@@ -3,9 +3,6 @@ ignore
 # Dev environment script
 dev.js
 
-# ES5 build
-lib
-
 # Logs
 logs
 *.log
