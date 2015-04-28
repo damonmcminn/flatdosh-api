@@ -26,31 +26,34 @@ function getBalances(req, res, next) {
     .run(conn)
     .then(results => {
 
-      let total = results.map(result => result.amount)
-        .reduce((prev, curr) => prev + curr);
+      let balances;
 
-      let largest = results.map(result => result.amount)
-        .reduce((prev, curr) => {
-          return prev > curr ? prev : curr;
-        });
+      if (results) {
+        let total = results.map(result => result.amount)
+          .reduce((prev, curr) => prev + curr);
 
-      let each = total/results.length;
-      let largestCredit = results.map(result => result.amount - each)
-        .reduce((p,c) => p > c ? p : c);
-      
-      let balances = results.map(result => {
-        return {
-          name: result.name,
-          Oldbalance: +((result.amount - largest).toFixed(2)),
-          balance: +(((result.amount - each) - largestCredit).toFixed(2)),
-          behind: result.amount - each
-        };
-      })
-      // empty if not balances, let's show them all for the timebeing
-      //.filter(result => result.balance < 0)
-      .sort((a,b) => a.name.toLowerCase() > b.name.toLowerCase());
+        let largest = results.map(result => result.amount)
+          .reduce((prev, curr) => {
+            return prev > curr ? prev : curr;
+          });
 
-      res.json(balances);
+        let each = total/results.length;
+        let largestCredit = results.map(result => result.amount - each)
+          .reduce((p,c) => p > c ? p : c);
+        
+        balances = results.map(result => {
+          return {
+            name: result.name,
+            Oldbalance: +((result.amount - largest).toFixed(2)),
+            balance: +(((result.amount - each) - largestCredit).toFixed(2)),
+            behind: result.amount - each
+          };
+        })
+        // empty if not balances, let's show them all for the timebeing
+        //.filter(result => result.balance < 0)
+        .sort((a,b) => a.name.toLowerCase() > b.name.toLowerCase());
+      }
+      res.json(balances || []);
     });
 }
 
