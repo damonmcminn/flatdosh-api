@@ -17,7 +17,7 @@ function all(group) {
   return expenses.filter({group})
     .eqJoin('email', r.table('users'))
     .zip()
-    .withFields('name', 'amount', 'timestamp')
+    .without('group', 'id', 'password', 'shared', 'email')
     .orderBy(r.desc('timestamp'))
     .run(conn)
     .then(db.toArray);
