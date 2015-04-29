@@ -16,8 +16,18 @@ function insert(expense) {
 function all(group) {
   return expenses.filter({group})
     .eqJoin('email', r.table('users'))
+    .without({right: 'id'}) // need expense document id, not user id which is email
     .zip()
-    .without('group', 'id', 'password', 'shared', 'email')
+    .map(expense => {
+      return {
+        amount: expense('amount'),
+        description: expense('description').default('NONE'),
+        name: expense('name'),
+        user: expense('email'),
+        id: expense('id'),
+        timestamp: expense('timestamp')
+      }
+    })
     .orderBy(r.desc('timestamp'))
     .run(conn)
     .then(db.toArray);
