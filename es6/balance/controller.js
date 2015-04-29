@@ -9,9 +9,20 @@ export default router;
 
 function getBalances(req, res, next) {
 
-  r.table('users').outerJoin(r.table('expenses'),
-    (user, expense) => {
-      return user('id').eq(expense('email'));
+  let {group} = req.user;
+
+  r.table('groups')
+    .get(group)
+    .getField('members')
+    .outerJoin(r.table('users'), (member, user) => member.eq(user('id')))
+    .map(u => {
+      return {
+        email: u('left'),
+        name: u('right')('name').default(u('left'))
+      }
+    })
+    .outerJoin(r.table('expenses'), (user, expense) => {
+      return user('email').eq(expense('email'));
     })
     .zip()
     .map(doc => {
