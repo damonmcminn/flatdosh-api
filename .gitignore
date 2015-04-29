@@ -1,4 +1,7 @@
+# old crap
 ignore
+
+*.pyc
 
 # Dev environment script
 dev.js
