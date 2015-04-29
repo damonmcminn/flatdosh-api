@@ -56,4 +56,13 @@ function get(email) {
 
 }
 
-export default {insert, all, validate, get};
+function inGroup(email) {
+
+  return r.table('groups')
+    .filter(group => group('members').contains(email))('id')
+    .run(conn)
+    .then(db.toArray);
+
+}
+
+export default {insert, all, validate, get, inGroup};

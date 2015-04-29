@@ -22,15 +22,39 @@ function insert(req, res, next) {
   // create user
   // return token
   // carry on
-  req.body.group = group;
+  //req.body.group = group;
 
-  let user = User.validate(req.body);
+  let s = {
+    'damonrmcminn@gmail.com': 'sarah.r.m.gibson@gmail.com',
+    'sarah.r.m.gibson@gmail.com': 'damonrmcminn@gmail.com'
+  };
 
-  return isError(user) ? next(user) : 
-    User.insert(user).then(result => {
-      return result.errors === 0 ? res.json(result) : next(result);
-    })
-    .catch(err => next(err));
+  let {email, name, password} = req.body;
+  let shared = s[email];
+
+  return User.inGroup(email).then(groups => {
+
+    let group = groups.pop();
+
+    if (!group) {
+      return res.status(403).json({message: 'bad email', email});
+    }
+
+    let user = {group, email, name, password};
+
+    if (shared) {
+      user.shared = shared;
+    }
+
+    user = User.validate(user);
+
+    return isError(user) ? next(user) : 
+      User.insert(user).then(result => {
+        return result.errors === 0 ? res.sendStatus(200) : res.status(400).json({message: 'Email already exists'});
+      })
+      .catch(err => next(err));
+
+  });
 }
 
 // not in use
