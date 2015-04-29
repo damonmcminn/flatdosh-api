@@ -32,9 +32,7 @@ function insert(req, res, next) {
   let {email, name, password} = req.body;
   let shared = s[email];
 
-  return User.inGroup(email).then(groups => {
-
-    let group = groups.pop();
+  return User.inGroup(email).then(group => {
 
     if (!group) {
       return res.status(403).json({message: 'bad email', email});

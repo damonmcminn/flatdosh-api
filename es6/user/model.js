@@ -59,9 +59,11 @@ function get(email) {
 function inGroup(email) {
 
   return r.table('groups')
-    .filter(group => group('members').contains(email))('id')
-    .run(conn)
-    .then(db.toArray);
+    .filter(group => group('members').contains(email))
+    ('id')
+    .nth(0)
+    .default(false) // catch index out of bounds error
+    .run(conn);
 
 }
 
