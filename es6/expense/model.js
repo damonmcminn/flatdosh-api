@@ -21,11 +21,14 @@ function all(group) {
     .map(expense => {
       return {
         amount: expense('amount'),
+        deleted: expense('deleted').default(false),
         description: expense('description').default('NONE'),
         name: expense('name'),
         user: expense('email'),
         id: expense('id'),
-        timestamp: expense('timestamp')
+        timestamp: expense('timestamp'),
+        creator: expense('creator'),
+        shareId: expense('shareId').default(null)
       }
     })
     .orderBy(r.desc('timestamp'))
@@ -33,4 +36,16 @@ function all(group) {
     .then(db.toArray);
 }
 
-export default {insert, all, validate};
+function destroy(user, expenseList) {
+
+  return expenses.getAll(r.args(expenseList))
+    .filter(r.or(
+      r.row('email').eq(user),
+      r.row('creator').eq(user)
+    ))
+    .update({deleted: true})
+    .run(conn);
+
+}
+
+export default {insert, all, validate, destroy};

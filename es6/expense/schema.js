@@ -23,5 +23,13 @@ export default [
     field: 'group',
     type: String,
     required: true
+  },
+  {
+    field: 'creator',
+    type: String
+  },
+  {
+    field: 'shareId',
+    type: String
   }
 ];
