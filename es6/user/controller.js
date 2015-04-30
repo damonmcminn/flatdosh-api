@@ -38,11 +38,7 @@ function insert(req, res, next) {
       return res.status(403).json({message: 'bad email', email});
     }
 
-    let user = {group, email, name, password};
-
-    if (shared) {
-      user.shared = shared;
-    }
+    let user = {group, email, name, password, shared};
 
     user = User.validate(user);
 

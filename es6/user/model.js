@@ -40,7 +40,13 @@ function insert(user) {
   let {email, name, password, group, shared} = user;
 
   return hash(password).then(hashed => {
-    let doc = {id: email, name, password: hashed, group, shared};
+    let doc = {id: email, name, password: hashed, group};
+
+    // rethink no like undefined values
+    if (shared) {
+      doc.shared = shared;
+    }
+
     return users.insert(doc).run(conn);
   });
 };
