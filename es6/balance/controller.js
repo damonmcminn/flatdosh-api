@@ -21,8 +21,9 @@ function getBalances(req, res, next) {
         name: u('right')('name').default(u('left'))
       }
     })
-    .outerJoin(r.table('expenses'), (user, expense) => {
-      return user('email').eq(expense('email'));
+    .outerJoin(r.table('expenses').filter(r.not(r.row.hasFields('deleted'))),
+      (user, expense) => {
+        return user('email').eq(expense('email'));
     })
     .zip()
     .map(doc => {
