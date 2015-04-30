@@ -3,7 +3,7 @@ export default function(req, res, next) {
   res.set({
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Headers': 'Authorization, Content-Type',
-    'Access-Control-Allow-Methods': '*',
+    'Access-Control-Allow-Methods': 'GET, POST, DELETE',
   });
 
   if (req.method.toLowerCase() === 'options') {
