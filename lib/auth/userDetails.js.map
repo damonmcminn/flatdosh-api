@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../es6/auth/userDetails.js"],"names":[],"mappings":";;;;;;;;oBAAiB,eAAe;;;;qBAEjB,UAAS,OAAO,EAAE;;AAE/B,SAAO,kBAAK,GAAG,CAAC,OAAO,CAAC,EAAE,CAAC,CAAC;CAE7B","file":"es6/auth/userDetails.js","sourcesContent":["import User from '../user/model';\n\nexport default function(payload) {\n\n  return User.get(payload.id);\n\n}\n"]}
