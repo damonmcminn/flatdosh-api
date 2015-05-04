@@ -4,6 +4,7 @@ import {isError} from 'js-type-check';
 import {group} from 'parse-config';
 
 const register = Router();
+const info = Router();
 
 // not in use
 function findAll(req, res, next) {
@@ -32,13 +33,15 @@ function insert(req, res, next) {
   let {email, name, password} = req.body;
   let shared = s[email];
 
-  return User.inGroup(email).then(group => {
+  return User.inGroup(email).then(groups => {
 
-    if (!group) {
+    let notInGroup = groups.length === 0;
+
+    if (notInGroup) {
       return res.status(403).json({message: 'bad email', email});
     }
 
-    let user = {group, email, name, password, shared};
+    let user = {groups, email, name, password, shared};
 
     user = User.validate(user);
 
@@ -51,22 +54,15 @@ function insert(req, res, next) {
   });
 }
 
-// not in use
 function find(req, res, next) {
 
-  let email = req.params.email;
-
-  User.get(email)
-    .then(user => {
-      user ? res.json(user) : res.status(404).json({message: 'User not found'});
-    })
-    .catch(err => next(err));
-
+  delete req.user.password;
+  res.json(req.user);
 }
 
 //router.get('/', findAll);
 
-//find.get('/:email', find);
+info.get('/', find);
 register.post('/', insert);
 
-export default {register};
+export default {register, info};

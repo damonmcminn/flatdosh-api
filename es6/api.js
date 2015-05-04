@@ -44,6 +44,7 @@ api.use(auth.token);
 
 api.use('/expense', Expense);
 api.use('/balance', Balance);
+api.use('/settings', User.info);
 
 api.use(route404);
 api.use('*', errorHandler);
