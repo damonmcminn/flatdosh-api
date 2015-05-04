@@ -26,19 +26,16 @@ export default function findUser(req) {
   return User.get(user).then(result => {
 
     if (result) {
-      let {id, name, group, shared} = result;
+      let {id, name, groups, shared} = result;
 
       let payload = {
-        user: id,
-        exp: THREE_MONTHS,
-        name,
-        group,
-        shared
+        id,
+        exp: THREE_MONTHS
       };
 
       let hash = result.password;
       let plain = password;
-      let data = {id, name, shared};
+      let data = {id, name, shared, groups};
 
       return Promise.resolve({payload, hash, plain, data});
     } else {
