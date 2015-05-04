@@ -9,7 +9,7 @@ export default router;
 
 function findAll(req, res, next) {
 
-  let {group} = req.user;
+  let {group} = req.params;
 
   Expense.all(group).then(expenses => {
     res.json(expenses);
@@ -21,7 +21,7 @@ function insert(req, res, next) {
 
   // user == the user
   // shared == the user with whom user shares a bank account
-  let user = req.user.user;
+  let user = req.user.id;
   let shared = req.user.shared;
 
   // if share undefined, filter it from array
@@ -29,13 +29,16 @@ function insert(req, res, next) {
   let timestamp = new Date();
   let amount = req.body.amount/people.length;
 
+  // validate group against req.user.groups
+  let group = req.body.group;
+
   let expenses = people.map(email => {
     return {
       amount,
       creator: user,
       description: req.body.description,
       email,
-      group: req.user.group,
+      group,
       timestamp
     }
   });
@@ -59,7 +62,7 @@ function insert(req, res, next) {
 
 function destroy(req, res, next) {
 
-  let user = req.user.user;
+  let user = req.user.id;
   let expenses = req.body;
 
   Expense.destroy(user, expenses)
@@ -69,6 +72,6 @@ function destroy(req, res, next) {
 
 }
 
-router.get('/', findAll);
+router.get('/:group', findAll);
 router.post('/', insert);
 router.delete('/', destroy);

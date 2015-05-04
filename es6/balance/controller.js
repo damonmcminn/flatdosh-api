@@ -9,7 +9,10 @@ export default router;
 
 function getBalances(req, res, next) {
 
-  let {group} = req.user;
+  let {groups} = req.user;
+  let {group} = req.params
+
+  // validate group is in groups i.e. allowed
 
   r.table('groups')
     .get(group)
@@ -69,4 +72,4 @@ function getBalances(req, res, next) {
     });
 }
 
-router.get('/', getBalances);
+router.get('/:group', getBalances);
