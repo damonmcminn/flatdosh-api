@@ -12,6 +12,7 @@ import {json} from 'body-parser';
 import User from './user/controller';
 import Expense from './expense/controller';
 import Balance from './balance/controller';
+import Group from './group/controller';
 
 const api = express();
 
@@ -45,6 +46,7 @@ api.use(auth.token);
 api.use('/expense', Expense);
 api.use('/balance', Balance);
 api.use('/settings', User.info);
+api.use('/members', Group);
 
 api.use(route404);
 api.use('*', errorHandler);
