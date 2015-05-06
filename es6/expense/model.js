@@ -15,7 +15,9 @@ function insert(expense) {
 
 function all(group) {
   return expenses.filter({group})
-    .eqJoin('email', r.table('users'))
+    .outerJoin(r.table('users'), (expense, user) => {
+      return expense('email').eq(user('id'));
+    })
     .without({right: 'id'}) // need expense document id, not user id which is email
     .zip()
     .map(expense => {
@@ -23,7 +25,7 @@ function all(group) {
         amount: expense('amount'),
         deleted: expense('deleted').default(false),
         description: expense('description').default('NONE'),
-        name: expense('name'),
+        name: expense('name').default(expense('email')),
         user: expense('email'),
         id: expense('id'),
         timestamp: expense('timestamp'),
