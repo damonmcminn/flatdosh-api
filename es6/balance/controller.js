@@ -3,27 +3,20 @@ import Expense from '../expense/model';
 import {isError} from 'js-type-check';
 import {r, conn} from '../db';
 
+import Group from '../group/model';
+
 const router = Router();
 
 export default router;
 
-function getBalances(req, res, next) {
+function negativeBalances(req, res, next) {
 
   let {groups} = req.user;
   let {group} = req.params
 
   // validate group is in groups i.e. allowed
 
-  r.table('groups')
-    .get(group)
-    .getField('members')
-    .outerJoin(r.table('users'), (member, user) => member.eq(user('id')))
-    .map(u => {
-      return {
-        email: u('left'),
-        name: u('right')('name').default(u('left'))
-      }
-    })
+  Group.members(group)
     .outerJoin(r.table('expenses').filter(r.not(r.row.hasFields('deleted'))),
       (user, expense) => {
         return user('email').eq(expense('email'));
@@ -59,9 +52,9 @@ function getBalances(req, res, next) {
         balances = results.map(result => {
           return {
             name: result.name,
-            Oldbalance: +((result.amount - largest).toFixed(2)),
+            //Oldbalance: +((result.amount - largest).toFixed(2)),
             balance: +(((result.amount - each) - largestCredit).toFixed(2)),
-            behind: result.amount - each
+            //behind: result.amount - each
           };
         })
         // empty if not balances, let's show them all for the timebeing
@@ -72,4 +65,32 @@ function getBalances(req, res, next) {
     });
 }
 
-router.get('/:group', getBalances);
+function actualBalances(req, res, next) {
+
+  let {groups} = req.user;
+  let {group} = req.params
+
+  // validate group is in groups i.e. allowed
+
+  Group.members(group)
+    .outerJoin(r.table('expenses').filter(r.not(r.row.hasFields('deleted'))),
+      (user, expense) => {
+        return user('email').eq(expense('email'));
+    })
+    .zip()
+    .map(doc => {
+      return doc.merge({amt: doc('amount').default(0)});
+    })
+    .group('name')
+    .sum('amt')
+    .ungroup()
+    .map(x => {
+      return {name: x('group'), balance: x('reduction')}
+    })
+    .run(conn)
+    .then(results => {
+      results.sort((a,b) => a.name.toLowerCase() > b.name.toLowerCase());
+      res.json(results || []);
+    });
+}
+router.get('/:group', negativeBalances);
