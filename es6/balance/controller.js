@@ -8,8 +8,9 @@ import Group from '../group/model';
 const router = Router();
 
 export default router;
+router.get('/:group', getBalances);
 
-function negativeBalances(req, res, next) {
+function getBalances(req, res, next) {
 
   let {groups} = req.user;
   let {group} = req.params
@@ -40,57 +41,18 @@ function negativeBalances(req, res, next) {
         let total = results.map(result => result.amount)
           .reduce((prev, curr) => prev + curr);
 
-        let largest = results.map(result => result.amount)
-          .reduce((prev, curr) => {
-            return prev > curr ? prev : curr;
-          });
-
         let each = total/results.length;
-        let largestCredit = results.map(result => result.amount - each)
-          .reduce((p,c) => p > c ? p : c);
-        
+
         balances = results.map(result => {
           return {
             name: result.name,
-            //Oldbalance: +((result.amount - largest).toFixed(2)),
-            balance: +(((result.amount - each) - largestCredit).toFixed(2)),
-            //behind: result.amount - each
+            balance: result.amount,
+            each,
+            owe: each - result.amount
           };
         })
-        // empty if not balances, let's show them all for the timebeing
-        //.filter(result => result.balance < 0)
         .sort((a,b) => a.name.toLowerCase() > b.name.toLowerCase());
       }
       res.json(balances || []);
     });
 }
-
-function actualBalances(req, res, next) {
-
-  let {groups} = req.user;
-  let {group} = req.params
-
-  // validate group is in groups i.e. allowed
-
-  Group.members(group)
-    .outerJoin(r.table('expenses').filter(r.not(r.row.hasFields('deleted'))),
-      (user, expense) => {
-        return user('email').eq(expense('email'));
-    })
-    .zip()
-    .map(doc => {
-      return doc.merge({amt: doc('amount').default(0)});
-    })
-    .group('name')
-    .sum('amt')
-    .ungroup()
-    .map(x => {
-      return {name: x('group'), balance: x('reduction')}
-    })
-    .run(conn)
-    .then(results => {
-      results.sort((a,b) => a.name.toLowerCase() > b.name.toLowerCase());
-      res.json(results || []);
-    });
-}
-router.get('/:group', negativeBalances);
