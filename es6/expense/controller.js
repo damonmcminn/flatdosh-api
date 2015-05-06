@@ -19,12 +19,20 @@ function findAll(req, res, next) {
 
 function insert(req, res, next) {
 
+  // need to check if spender in group
+  let spender = req.body.spender;
+
   // user == the user
   // shared == the user with whom user shares a bank account
   let user = req.user.id;
-  let shared = req.user.shared;
 
-  // if share undefined, filter it from array
+  // saving expense on behalf of another member?
+  let onBehalfOf = (spender !== user && spender !== req.user.shared);
+
+  // false, undefined or a members email
+  let shared = onBehalfOf ? false : req.user.shared;
+
+  // if share undefined|false, filter it from array
   let people = [user, shared].filter(email => email);
   let timestamp = new Date();
   let amount = req.body.amount/people.length;
@@ -48,6 +56,9 @@ function insert(req, res, next) {
     if (shared) {
       expense.shareId = shareId;
     }
+    if (onBehalfOf) {
+      expense.email = spender;
+    }
   });
 
   let validatedExpense = Expense.validate(expenses[0]);
@@ -68,7 +79,8 @@ function destroy(req, res, next) {
   Expense.destroy(user, expenses)
     .then(result => {
       res.json({deleted: expenses});
-    });
+    })
+    .catch(next);
 
 }
 
