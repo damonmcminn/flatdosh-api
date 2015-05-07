@@ -41,14 +41,20 @@ function getBalances(req, res, next) {
         let total = results.map(result => result.amount)
           .reduce((prev, curr) => prev + curr);
 
-        let each = total/results.length;
+        // always round up to closest 1p
+        let each = Math.ceil((total/results.length)*100)/100;
 
         balances = results.map(result => {
+
+          let owe = each - result.amount;
+          let owed = result.amount - each;
+
           return {
             name: result.name,
             balance: result.amount,
             each,
-            owe: each - result.amount
+            owe,
+            owed 
           };
         })
         .sort((a,b) => a.name.toLowerCase() > b.name.toLowerCase());
