@@ -19,3 +19,15 @@ def add_members(id, xs):
         .add(xs)})
         .run()
         )
+
+g = {}
+for group in db.groups.run():
+    g[group['name']] = group['id']
+
+def groups():
+    print 'GROUPS:'
+    for group, id in g.iteritems():
+        print ' * ' + group
+        print '   ' + id
+        for member in db.groups.get(id)['members'].run():
+            print '    - ' + member
