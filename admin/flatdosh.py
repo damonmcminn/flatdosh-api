@@ -44,3 +44,7 @@ def history(group):
         e['timestamp'] = str(e['timestamp'])
 
     print json.dumps(history, indent=2)
+
+def users():
+    users = list(db.users.without('shared', 'groups', 'password').run())
+    print json.dumps(users, indent=2)
