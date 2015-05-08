@@ -1,4 +1,6 @@
+# coding=utf8
 import rethinkdb as r
+import json
 
 r.connect().repl()
 
@@ -25,9 +27,22 @@ for group in db.groups.run():
     g[group['name']] = group['id']
 
 def groups():
-    print 'GROUPS:'
     for group, id in g.iteritems():
         print ' * ' + group
         print '   ' + id
         for member in db.groups.get(id)['members'].run():
             print '    - ' + member
+
+def history(group):
+    history = list(
+        db.expenses.filter({'group': group})
+        .with_fields('email', 'amount', 'description', 'timestamp', 'creator')
+        .order_by(r.desc('timestamp'))
+        .run())
+
+    for e in history:
+        e['timestamp'] = str(e['timestamp'])
+
+    print json.dumps(history, indent=2)
+
+history(g['local'])
