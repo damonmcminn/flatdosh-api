@@ -26,5 +26,13 @@
     "schema": "git://github.com/damonmcminn/schema.git",
     "simple-error-factory": "^0.2.0",
     "source-map-support": "^0.2.10"
+  },
+  "devDependencies": {
+    "gulp": "^3.8.11",
+    "gulp-babel": "^5.1.0",
+    "gulp-changed": "^1.2.1",
+    "gulp-jasmine": "^2.0.1",
+    "gulp-nodemon": "^2.0.3",
+    "gulp-sourcemaps": "^1.5.2"
   }
 }
