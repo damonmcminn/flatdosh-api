@@ -5,14 +5,18 @@ import json
 r.connect().repl()
 
 fd = r.db('flatdosh')
-
 class DB:
     def __init__(self):
         self.groups = fd.table('groups')
         self.users = fd.table('users')
         self.expenses = fd.table('expenses')
 
+
 db = DB()
+g = {}
+
+for group in db.groups.run():
+    g[group['name']] = group['id']
 
 def add_members(id, xs):
     return (
@@ -22,14 +26,10 @@ def add_members(id, xs):
         .run()
         )
 
-g = {}
-for group in db.groups.run():
-    g[group['name']] = group['id']
-
 def groups():
     for group, id in g.iteritems():
         print ' * ' + group
-        print '   ' + id
+        #print '   ' + id
         for member in db.groups.get(id)['members'].run():
             print '    - ' + member
 
@@ -44,5 +44,3 @@ def history(group):
         e['timestamp'] = str(e['timestamp'])
 
     print json.dumps(history, indent=2)
-
-history(g['local'])
