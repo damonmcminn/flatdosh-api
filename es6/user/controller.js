@@ -38,7 +38,7 @@ function insert(req, res, next) {
     let notInGroup = groups.length === 0;
 
     if (notInGroup) {
-      return res.status(403).json({message: 'bad email', email});
+      return res.status(403).json({message: 'You need an invite', email});
     }
 
     let user = {groups, email, name, password, shared};
