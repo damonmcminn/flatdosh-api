@@ -6,7 +6,7 @@ db = 'flatdosh'
 host = 'localhost'
 port = 28015
 
-tables = ['users', 'expenses', 'groups']
+tables = ['users', 'expenses', 'groups', 'settled']
 
 parser = argparse.ArgumentParser(description='RethinkDB admin')
 parser.add_argument(
