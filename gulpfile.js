@@ -7,6 +7,9 @@ const babel = require('gulp-babel');
 const sourcemaps = require('gulp-sourcemaps');
 const changed = require('gulp-changed');
 
+const SRC = ['es6/**/*.js', 'es6/*.js'];
+const DEST = 'lib';
+
 gulp.task('default', ['run', 'watch']);
 
 
@@ -28,9 +31,6 @@ function test() {
 
 gulp.task('babel', function() {
 
-  const SRC = ['es6/**/*.js', 'es6/*.js'];
-  const DEST = 'lib';
-
   return gulp.src(SRC)
     // must compare last modified time as src will always be different to dest
     // as it's transpiled etc..
@@ -42,7 +42,18 @@ gulp.task('babel', function() {
 
 });
 
-gulp.task('run', ['transpile'], function() {
+gulp.task('fullTranspile', function() {
+
+  return gulp.src(SRC)
+    // must compare last modified time as src will always be different to dest
+    // as it's transpiled etc..
+    .pipe(sourcemaps.init())
+    .pipe(babel())
+    .pipe(sourcemaps.write())
+    .pipe(gulp.dest(DEST));
+
+});
+gulp.task('run', ['fullTranspile'], function() {
 
   nodemon({
     script: 'nada.js',
