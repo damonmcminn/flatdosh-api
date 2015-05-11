@@ -5,6 +5,7 @@ import log from './log';
 import errorHandler from './error';
 import route404 from './404';
 import CORS from './cors';
+import requests from './requests';
 
 import {json} from 'body-parser';
 
@@ -42,6 +43,7 @@ api.use('/register', User.register);
 api.use('/login', auth.password);
 
 api.use(auth.token);
+api.use('*', requests);
 
 api.use('/expense', Expense);
 api.use('/balance', Balance);
