@@ -2,7 +2,7 @@ import {Router} from 'express';
 import User from './model';
 import {isError} from 'js-type-check';
 import {group} from 'parse-config';
-import log from './log';
+import log from '../log';
 
 const register = Router();
 const info = Router();
