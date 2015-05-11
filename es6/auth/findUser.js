@@ -19,7 +19,7 @@ export default function findUser(req) {
   let {user, password} = parsed;
 
   // logging base64 encoded password here... possibly
-  log.info({login: user || header});
+  log.info({login_attempt: user || header});
 
   if (!parsed) return Promise.reject(AuthError(`Couldn't parse: ${header}`));
 
