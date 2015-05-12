@@ -1,0 +1,9 @@
+---
+  - hosts: [grasslane]
+    gather_facts: no
+    remote_user: damon
+    tasks:
+    - name: update repo
+      git: repo=git@bitbucket.org:DamonMcMinn/flatdosh-api.git dest=/home/damon/flatdosh-api
+    - name: restart PM2
+      command: pm2 restart flatdosh
