@@ -25,15 +25,14 @@ api.initialise = function() {
 
     api.listen(CONFIG.port, function(err) {
       if (!err) {
-        log.info(`Listening on ${CONFIG.port}`);
-        Promise.resolve();
+        resolve(log.info(`Listening on ${CONFIG.port}`));
       } else {
-        Promise.reject(err);
+        reject(err);
       }
     });
 
   });
-}
+};
 
 api.use(CORS);
 api.use(json());

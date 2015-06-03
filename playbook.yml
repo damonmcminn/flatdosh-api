@@ -4,6 +4,6 @@
     remote_user: damon
     tasks:
     - name: update repo
-      git: repo=git@bitbucket.org:DamonMcMinn/flatdosh-api.git dest=/home/damon/flatdosh-api
+      git: repo=git@bitbucket.org:flatdosh/flatdosh-api.git dest=/home/damon/flatdosh-api
     - name: restart PM2
       command: pm2 restart flatdosh
