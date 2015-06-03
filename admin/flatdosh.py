@@ -3,6 +3,7 @@
 import argparse
 import fn
 import json
+from db import g
 
 parser = argparse.ArgumentParser(description='flatdosh admin')
 parser.add_argument('-u', '--users', action='store_true')
