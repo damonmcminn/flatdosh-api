@@ -12,9 +12,12 @@ const DEST = 'lib';
 
 gulp.task('default', ['run', 'watch']);
 
+gulp.task('supertest', function() {
+  gulp.watch(['es6/**/*.js', 'es6/*.js'], ['babel']);
+})
 
 gulp.task('watch', function() {
-  
+
   gulp.watch(['es6/**/*.js', 'es6/*.js'], ['transpile']);
   gulp.watch(['spec/**/*.js'], ['test']);
 
